@@ -1,0 +1,17 @@
+<!-- templates/index.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Todas las fotos</h2>
+    <ul>
+        {% for photo in photos %}
+        <li>
+            <h3>{{ photo.title }}</h3>
+            <p>{{ photo.description }}</p>
+            <img src="{{ url_for('static', filename=photo.image) }}" alt="{{ photo.title }}" width="100">
+            <a class="boton" href="{{ url_for('edit_photo', id=photo.id) }}">Editar</a>
+            <a class="boton" href="{{ url_for('delete_photo', id=photo.id) }}" onclick="return confirm('Are you sure you want to delete this photo?')">Borrar</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

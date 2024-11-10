@@ -1,0 +1,25 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Album</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+        </style>
+</head>
+<body>
+    <header>
+        <h1 class="oswald-title">ALBUM DE FOTOS</h1>
+        <nav>
+            <a class="enlace-header" href="{{ url_for('index') }}">Inicio</a> |
+            <a class="enlace-header" href="{{ url_for('add_photo') }}">Añadir nueva foto</a>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
