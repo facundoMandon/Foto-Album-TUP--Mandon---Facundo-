@@ -18,5 +18,5 @@ app.config.from_object('config.Config')
 
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()  # Crear las tablas de la base de datos
+        db.create_all()  # Crea las tablas de la base de datos
     app.run(debug=True)

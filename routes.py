@@ -22,58 +22,58 @@ def index():
 # Ruta para crear una nueva foto
 @app.route('/add', methods=['GET', 'POST'])
 def add_photo():
-    form = PhotoForm()  # Crear una instancia del formulario
+    form = PhotoForm()  # Crea una instancia del formulario
     if form.validate_on_submit():
-        image_file = request.files['image']  # Obtener el archivo de la imagen
+        image_file = request.files['image']  # Obteniene el archivo de la imagen
 
         if image_file and allowed_file(image_file.filename):
-            # Usar secure_filename para obtener un nombre de archivo seguro
+            # Usa secure_filename para obtener un nombre de archivo seguro
             filename = secure_filename(image_file.filename)
-            # Guardar la imagen en el directorio de uploads
+            # Guarda la imagen en el directorio de uploads
             image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            # Crear una nueva foto a partir de los datos del formulario
+            # Crea una nueva foto a partir de los datos del formulario
             new_photo = Photo(
                 title=form.title.data,
                 description=form.description.data,
-                image='uploads/' + filename  # Guardar solo el nombre del archivo
+                image='uploads/' + filename  # Guarda solo el nombre del archivo
             )
-            db.session.add(new_photo)  # Agregar la foto a la base de datos
-            db.session.commit()  # Confirmar los cambios
-            return redirect(url_for('index'))  # Redirigir a la página principal
+            db.session.add(new_photo)  # Agrega la foto a la base de datos
+            db.session.commit()  # Confirma los cambios
+            return redirect(url_for('index'))  # Vuelve a la página inicial
     return render_template('photo_form.html', form=form)
 
 # Ruta para editar una foto existente
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_photo(id):
-    photo = Photo.query.get_or_404(id)  # Obtener la foto por su ID
-    form = PhotoForm(obj=photo)  # Crear el formulario y cargar los datos de la foto
+    photo = Photo.query.get_or_404(id)  # Toma la foto por el ID
+    form = PhotoForm(obj=photo)  # Carga los datos de la foto
 
     if form.validate_on_submit():
-        # Actualizar los campos de la foto
+        # Actualiza los campos de la foto
         photo.title = form.title.data
         photo.description = form.description.data
 
-        # Verificar si se cargó una nueva imagen
+        # Verifica si se cargó una nueva imagen
         if 'image' in request.files:
             image_file = request.files['image']
             if image_file and allowed_file(image_file.filename):
-                # Usar secure_filename para asegurarse de que el nombre del archivo es seguro
+                # Usa secure_filename para asegurarse de que el nombre del archivo es seguro
                 filename = secure_filename(image_file.filename)
                 # Guardar la imagen en la carpeta uploads
                 image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                # Actualizar la imagen en la base de datos (guardar solo el nombre del archivo)
+                # Actualiza la imagen en la base de datos (guardar solo el nombre del archivo)
                 photo.image = 'uploads/' + filename  # Guarda la ruta de la imagen
 
-        db.session.commit()  # Confirmar los cambios en la base de datos
-        return redirect(url_for('index'))  # Redirigir al índice después de la actualización
+        db.session.commit()  # Confirma los cambios en la base de datos
+        return redirect(url_for('index'))  # Vuelve a la pagina inicial
 
-    return render_template('photo_form.html', form=form)  # Volver a mostrar el formulario si hay errores
+    return render_template('photo_form.html', form=form)  # Vuelve a mostrar el formulario si hay errores
 
 # Ruta para eliminar una foto
 @app.route('/delete/<int:id>', methods=['GET', 'POST'])
 def delete_photo(id):
-    photo = Photo.query.get_or_404(id)  # Obtener la foto por id
-    db.session.delete(photo)  # Eliminar la foto
-    db.session.commit()  # Confirmar los cambios
-    return redirect(url_for('index'))  # Redirigir a la página principal
+    photo = Photo.query.get_or_404(id)  # Toma la foto por id
+    db.session.delete(photo)  # Elimina la foto
+    db.session.commit()  # Confirma los cambios
+    return redirect(url_for('index'))  # Vuelve a la página principal
